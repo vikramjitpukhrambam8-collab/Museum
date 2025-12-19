@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Manipur State Museum</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #d97706 0%, #ea580c 100%);">
+        <div class="card" style="max-width: 450px; width: 100%; margin: 20px;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Admin Panel</h1>
+                <p style="color: var(--text-light);">Manipur State Museum</p>
+            </div>
+            
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" class="form-control" placeholder="admin@museum.gov.in" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #fff7ed; border-radius: 8px; border-left: 4px solid var(--primary-color);">
+                <p style="font-size: 0.875rem; margin: 0;"><strong>Demo Credentials:</strong></p>
+                <p style="font-size: 0.875rem; margin: 0.5rem 0 0 0;">Email: admin@museum.gov.in<br>Password: Admin@123</p>
+            </div>
+        </div>
+    </div>
+
+                <!-- Add Exhibition Form -->
+                <div id="addExhibitionForm" class="admin-page" style="display: none;">
+                    <div class="admin-header">
+                        <h1>Add New Exhibition</h1>
+                        <button class="btn btn-secondary" onclick="showAdminPage('exhibitions')">← Back</button>
+                    </div>
+
+                    <div class="card">
+                        <form id="exhibitionForm">
+                            <div class="form-group">
+                                <label>Title *</label>
+                                <input type="text" name="title" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description *</label>
+                                <textarea name="description" class="form-control" rows="4" required></textarea>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <div class="form-group">
+                                    <label>Type *</label>
+                                    <select name="type" class="form-control" required>
+                                        <option value="">Select Type</option>
+                                        <option value="Permanent">Permanent</option>
+                                        <option value="Temporary">Temporary</option>
+                                        <option value="Special">Special</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Start Date *</label>
+                                    <input type="date" name="startDate" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>End Date</label>
+                                    <input type="date" name="endDate" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" name="location" class="form-control" placeholder="e.g., Gallery A">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Image (upload)</label>
+                                <input type="file" name="image" accept="image/*" class="form-control">
+                                <small style="color:var(--text-light);">You can also provide an image URL in the field below.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Image URL (optional)</label>
+                                <input type="url" name="imageUrl" class="form-control" placeholder="https://example.com/image.jpg">
+                            </div>
+
+                            <div style="display: flex; gap: 1rem;">
+                                <button type="submit" class="btn btn-success">Save Exhibition</button>
+                                <button type="button" class="btn btn-secondary" onclick="showAdminPage('exhibitions')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" style="display: none;">
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <h2>Admin Panel</h2>
+                <ul class="admin-menu">
+                    <li><a href="#dashboard" class="admin-nav-link active" data-page="dashboard">📊 Dashboard</a></li>
+                    <li><a href="#collections" class="admin-nav-link" data-page="collections">🖼️ Collections</a></li>
+                    <li><a href="#exhibitions" class="admin-nav-link" data-page="exhibitions">🏛️ Exhibitions</a></li>
+                    <li><a href="#events" class="admin-nav-link" data-page="events">📅 Events</a></li>
+                    <li><a href="#news" class="admin-nav-link" data-page="news">📰 News</a></li>
+                    <li><a href="#contacts" class="admin-nav-link" data-page="contacts">✉️ Contacts</a></li>
+                    <li><a href="#users" class="admin-nav-link" data-page="users">👥 Users</a></li>
+                    <li><a href="#" onclick="handleAdminLogout()" style="color: #ef4444;">🚪 Logout</a></li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="admin-content">
+                <!-- Dashboard Page -->
+                <div id="dashboardPage" class="admin-page">
+                    <div class="admin-header">
+                        <h1>Dashboard</h1>
+                        <div>
+                            <span id="adminUserName" style="margin-right: 1rem; font-weight: 500;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Collections</h3>
+                            <div class="stat-number" id="statCollections">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Active Exhibitions</h3>
+                            <div class="stat-number" id="statExhibitions">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Upcoming Events</h3>
+                            <div class="stat-number" id="statEvents">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>News Articles</h3>
+                            <div class="stat-number" id="statNews">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card" style="margin-top: 2rem;">
+                        <h2 style="margin-bottom: 1.5rem;">Quick Actions</h2>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <button class="btn btn-primary" onclick="showAddCollectionForm()">➕ Add Collection</button>
+                            <button class="btn btn-primary" onclick="showAddExhibitionForm()">➕ Add Exhibition</button>
+                            <button class="btn btn-primary" onclick="showAddEventForm()">➕ Add Event</button>
+                            <button class="btn btn-primary" onclick="showAddNewsForm()">➕ Add News</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collections Page -->
+                <div id="collectionsPage" class="admin-page" style="display: none;">
+                    <div class="admin-header">
+                        <h1>Manage Collections</h1>
+                        <button class="btn btn-primary" onclick="showAddCollectionForm()">➕ Add Collection</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Period</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminCollectionsTable">
+                                <tr><td colspan="5" class="text-center">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Collection Form -->
+                <div id="addCollectionForm" class="admin-page" style="display: none;">
+                    <div class="admin-header">
+                        <h1>Add New Collection</h1>
+                        <button class="btn btn-secondary" onclick="showAdminPage('collections')">← Back</button>
+                    </div>
+
+                    <div class="card">
+                        <form id="collectionForm">
+                            <div class="form-group">
+                                <label>Title *</label>
+                                <input type="text" name="title" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description *</label>
+                                <textarea name="description" class="form-control" rows="4" required></textarea>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <div class="form-group">
+                                    <label>Category *</label>
+                                    <select name="category" class="form-control" required>
+                                        <option value="">Select Category</option>
+                                        <option value="Archaeology">Archaeology</option>
+                                        <option value="Ethnography">Ethnography</option>
+                                        <option value="Art">Art</option>
+                                        <option value="Natural History">Natural History</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Period *</label>
+                                    <input type="text" name="period" class="form-control" placeholder="e.g., 15th Century" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Origin *</label>
+                                    <input type="text" name="origin" class="form-control" placeholder="e.g., Imphal" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Material</label>
+                                    <input type="text" name="material" class="form-control" placeholder="e.g., Bronze, Silk">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Image URL</label>
+                                <input type="url" name="image" class="form-control" placeholder="https://example.com/image.jpg">
+                            </div>
+
+                            <div style="display: flex; gap: 1rem;">
+                                <button type="submit" class="btn btn-success">Save Collection</button>
+                                <button type="button" class="btn btn-secondary" onclick="showAdminPage('collections')">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Other pages placeholders -->
+                <div id="exhibitionsPage" class="admin-page" style="display: none;">
+                    <div class="admin-header">
+                        <h1>Manage Exhibitions</h1>
+                        <button class="btn btn-primary">➕ Add Exhibition</button>
+                    </div>
+                    <div class="card">
+                        <p>Exhibition management interface will be displayed here.</p>
+                    </div>
+                </div>
+
+                <div id="eventsPage" class="admin-page" style="display: none;">
+                    <div class="admin-header">
+                        <h1>Manage Events</h1>
+                        <button class="btn btn-primary">➕ Add Event</button>
+                    </div>
+                    <div class="card">
+                        <p>Event management interface will be displayed here.</p>
+                    </div>
+                </div>
+
+                <div id="newsPage" class="admin-page" style="display: none;">
+                    <div class="admin-header">
+                        <h1>Manage News</h1>
+                        <button class="btn btn-primary">➕ Add News</button>
+                    </div>
+                    <div class="card">
+                        <p>News management interface will be displayed here.</p>
+                    </div>
+                </div>
+
+                <div id="contactsPage" class="admin-page" style="display: none;">
+                    <div class="admin-header">
+                        <h1>Contact Messages</h1>
+                    </div>
+                    <div class="card">
+                        <p>Contact messages will be displayed here.</p>
+                    </div>
+                </div>
+
+                <div id="usersPage" class="admin-page" style="display: none;">
+                    <div class="admin-header">
+                        <h1>User Management</h1>
+                        <button class="btn btn-primary">➕ Add User</button>
+                    </div>
+                    <div class="card">
+                        <p>User management interface will be displayed here.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script>
+        // Check authentication on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (isLoggedIn()) {
+                showAdminDashboard();
+            }
+        });
+
+        // Show admin dashboard
+        function showAdminDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            
+            const user = getUser();
+            if (user) {
+                document.getElementById('adminUserName').textContent = user.name;
+            }
+            
+            loadAdminStats();
+            
+            // Handle navigation from URL hash
+            const hash = window.location.hash.substring(1) || 'dashboard';
+            showAdminPage(hash);
+        }
+
+        // Show specific admin page
+        function showAdminPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.admin-page').forEach(page => {
+                page.style.display = 'none';
+            });
+            
+            // Remove active class from all nav links
+            document.querySelectorAll('.admin-nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected page
+            const pageElement = document.getElementById(pageName + 'Page');
+            if (pageElement) {
+                pageElement.style.display = 'block';
+            }
+            
+            // Add active class to current nav link
+            const activeLink = document.querySelector(`[data-page="${pageName}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+            
+            // Load page-specific data
+            if (pageName === 'collections') {
+                loadAdminCollections();
+            } else if (pageName === 'dashboard') {
+                loadAdminStats();
+            } else if (pageName === 'exhibitions') {
+                loadAdminExhibitions();
+            }
+            
+            // Update URL hash
+            window.location.hash = pageName;
+        }
+
+        // Add event listeners to admin navigation
+        document.querySelectorAll('.admin-nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageName = link.dataset.page;
+                if (pageName) {
+                    showAdminPage(pageName);
+                }
+            });
+        });
+
+        // Show add collection form
+        function showAddCollectionForm() {
+            document.querySelectorAll('.admin-page').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById('addCollectionForm').style.display = 'block';
+        }
+
+        // Handle collection form submission
+        document.getElementById('collectionForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await apiFetch('/api/admin/collections', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Collection created successfully!', 'success');
+                    e.target.reset();
+                    showAdminPage('collections');
+                } else {
+                    showNotification(result.message || 'Failed to create collection', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating collection:', error);
+                showNotification('Error creating collection', 'error');
+            }
+        });
+
+        // Handle exhibition form submission
+        document.getElementById('exhibitionForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                // If file input present, send as multipart/form-data
+                const fileInput = e.target.querySelector('input[type="file"][name="image"]');
+                let response;
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    const form = new FormData();
+                    for (const [k, v] of Object.entries(data)) {
+                        form.append(k, v);
+                    }
+                    form.append('image', fileInput.files[0]);
+
+                    response = await apiFetch('/api/admin/exhibitions', {
+                        method: 'POST',
+                        body: form
+                    });
+                } else {
+                    // allow optional imageUrl field to be used as `image`
+                    if (data.imageUrl) data.image = data.imageUrl;
+                    delete data.imageUrl;
+
+                    response = await apiFetch('/api/admin/exhibitions', {
+                        method: 'POST',
+                        body: JSON.stringify(data)
+                    });
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('Exhibition created successfully!', 'success');
+                    e.target.reset();
+                    showAdminPage('exhibitions');
+                } else {
+                    showNotification(result.message || 'Failed to create exhibition', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating exhibition:', error);
+                showNotification('Error creating exhibition', 'error');
+            }
+        });
+
+        // Show add exhibition form
+        function showAddExhibitionForm() {
+            document.querySelectorAll('.admin-page').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById('addExhibitionForm').style.display = 'block';
+        }
+
+        function showAddEventForm() {
+            showNotification('Event form - Coming soon!', 'success');
+        }
+
+        function showAddNewsForm() {
+            showNotification('News form - Coming soon!', 'success');
+        }
+
+        function editCollection(id) {
+            showNotification('Edit functionality - Coming soon!', 'success');
+        }
+    </script>
+</body>
+</html>
